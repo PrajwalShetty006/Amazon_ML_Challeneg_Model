@@ -1,0 +1,50 @@
+# -*- coding: utf-8 -*-
+"""Generate a notebook entrypoint for the production batch pipeline."""
+
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parent
+OUTFILE = ROOT / "New_Model.ipynb"
+
+notebook = {
+    "cells": [
+        {
+            "cell_type": "markdown",
+            "id": "full-pipeline-title",
+            "metadata": {},
+            "source": [
+                "# Business Entity Resolution\n",
+                "\n",
+                "Full labeled-data training and complete test inference run in bounded batches.\n",
+                "The pipeline builds temporary disk-backed indexes and validates both output files."
+            ],
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "id": "run-full-pipeline",
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "from pathlib import Path\n",
+                "import runpy\n",
+                "\n",
+                "pipeline = Path.cwd() / 'run_full_pipeline.py'\n",
+                "if not pipeline.is_file():\n",
+                "    pipeline = Path('run_full_pipeline.py').resolve()\n",
+                "runpy.run_path(str(pipeline), run_name='__main__')"
+            ],
+        },
+    ],
+    "metadata": {
+        "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+        "language_info": {"name": "python", "version": "3.13.1"},
+    },
+    "nbformat": 4,
+    "nbformat_minor": 5,
+}
+
+OUTFILE.write_text(json.dumps(notebook, indent=1, ensure_ascii=False), encoding="utf-8")
+print(f"Written: {OUTFILE}")
